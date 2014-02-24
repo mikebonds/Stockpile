@@ -55,6 +55,7 @@
 				_destroy.call(item);
 			});
 
+			this.items = [];
 			_destroy.call(this.el);
 			window[this.name] = null; // Clean up from global object if present.
 		},
@@ -64,7 +65,7 @@
 		length: 0
 	};
 
-	Stockpile.VERSION = '0.1.2';
+	Stockpile.VERSION = '0.1.2.1';
 
 	// Element Methods
 	var _destroy = function() {
@@ -87,7 +88,7 @@
 		var modified = _getModifiedHelper(this.items, index, new_index);
 
 		_data(item).set('item_index', new_index);
-		_reFlow(modified, index, new_index, this);
+		_reFlow(modified, index, this);
 	};
 
 	var _getModifiedHelper = function(items, start_index, end_index, context) {
@@ -98,7 +99,7 @@
 		}
 	};
 
-	var _reFlow = function(items, index, new_index, context) {
+	var _reFlow = function(items, index, context) {
 		var i = 0, length = items.length;
 
 		if(items.length === context.items.length) index = 0;
