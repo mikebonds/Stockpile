@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Stockpile.js Test page</title>
+<meta name="description" content="Stockpile.js Test page">
+<meta name="author" content="Michael Bonds">
+<script type="text/javascript" src="Stockpile.js"></script>
+
+<style>
+	.my-pile {
+		width: 80%;
+		height: 600px;
+		margin: 20px auto;
+		background-color: rgb(235,235,235);
+		position: relative;
+	}
+
+	.LayerManager-item {
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		box-shadow: -5px 5px 0px rgba(0,0,0,.3);
+	}
+
+	.test1 {
+		top: 10px;
+		left: 10px;
+		background-color: rgb(245,54,125);
+	}
+
+	.test2 {
+		top: 50px;
+		left: 50px;
+		background-color: rgb(140, 217, 160);
+	}
+
+	.test3 {
+		top: 90px;
+		left: 90px;
+		background-color: rgb(148, 70, 167);
+	}
+
+	.test4 {
+		top: 130px;
+		left: 130px;
+		background-color: rgb(138, 200, 244);
+	}
+</style>
+
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style type="text/css" media="screen">
+</style>
+</head>
+
+<body>
+	<!-- Currently, no content will be visable on the page -->
+<script>
+
+var LayerManager = new Stockpile({
+	className: 'my-pile my-awesome-class',
+
+	name: 'LayerManager',
+
+	initialize: function() {
+		this.el.insertInto('body');
+		this.render();
+	},
+
+	removeAll: function() {
+		this.destroy(); // Also removes this.el from the DOM
+	},
+
+	render: function() {
+		for(var i = 1; i <= 4; i++) {
+			this.addItem(false, false, 'test' + i);
+		}
+	}
+});
+</script>
+</body>
+</html>
