@@ -7,29 +7,29 @@ The user has the ability to extend the prototype by passing in an object.
 
 # Creating a Stockpile #
 
-	var LayerManager = new Stockpile({
-    	el: 'section',
+    var LayerManager = new Stockpile({
+        el: 'section',
 
-    	className: 'my-layers',
+        className: 'my-layers',
 
-    	name: 'LayerManager',
+        name: 'LayerManager',
 
-    	initialize: function() {
-    		console.log('LayerManager is initialized!');
-    		this.render();
-    		this.createLayers();
-    	},
+        initialize: function() {
+            console.log('LayerManager is initialized!');
+            this.render();
+            this.createLayers();
+        },
 
-    	render: function() {
-    		this.el.insertInto('body');
-    	},
+        render: function() {
+            this.el.insertInto('body');
+        },
 
-    	createLayers: function() {
-			for(var i = 1; i <= 4; i++) {
-				this.addItem(false, false, 'test' + i);
-			}
-    	}
-	});
+        createLayers: function() {
+            for(var i = 1; i <= 4; i++) {
+                this.addItem(false, false, 'test' + i);
+            }
+        }
+    });
 
 # Upcoming Method Updates #
 
@@ -46,7 +46,7 @@ The user has the ability to extend the prototype by passing in an object.
 
 # Disclaimer #
 
-This code is provided with no warranty. The code is still under active development. As this is the case, some revisions may break break compatibility with earlier versions of the library. Please keep this in mind when using Stockpile.js.
+This code is provided with no warranty. The code is still under active development, and revisions will come at a rapid pace. As this is the case, some revisions may break break compatibility with earlier versions of the library. Please keep this in mind when using Stockpile.js.
 
 Stockpile.js is still very much under development.
 If you have stumbled upon this code, please take into consideration that this is a very young project.
