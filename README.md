@@ -6,8 +6,7 @@ Stockpile.js Allows a user to create a new Stockpiles a needed through a new Sto
 The user has the ability to extend the prototype by passing in an object. 
 
 # Creating a Stockpile #
-
-    var LayerManager = new Stockpile({
+    var LayerManager = Stockpile({
         el: 'section',
 
         className: 'my-layers',
@@ -33,8 +32,6 @@ The user has the ability to extend the prototype by passing in an object.
 
 # Upcoming Method Updates #
 
-* moveToFront
-* moveToBack
 * lockInPlace
 * unLock
 
@@ -43,6 +40,12 @@ The user has the ability to extend the prototype by passing in an object.
 * CreateGroup
 * removeGroup
 * unGroup
+
+# Recently Added Methods #
+
+* moveToBack
+* moveToFront
+* moveToPrevious
 
 # Disclaimer #
 

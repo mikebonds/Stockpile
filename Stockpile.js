@@ -39,6 +39,18 @@
 			_moveInDirection.call(this, item, 'up');
 		},
 
+		moveToFront: function(item) {
+			_moveTo.call(this, item, this.items.length -1);
+		},
+
+		moveToBack: function(item) {
+			_moveTo.call(this, item, 0);
+		},
+
+		moveToPrevious: function(item) {
+			_moveTo.call(this, item, _data(item).get('previous_index'));
+		},
+
 		// Will need a better argument name for amount as it can also be an array of elements.
 		addItem: function(amount, type, classes) {
 			if(amount instanceof Array || typeof amount === 'object') {
@@ -69,7 +81,7 @@
 		length: 0
 	};
 
-	Stockpile.VERSION = '0.1.3.0';
+	Stockpile.VERSION = '0.1.4.0';
 
 	// Element Methods
 	var _destroy = function() {
@@ -85,14 +97,24 @@
 		}
 	};
 
+	// _moveInDirection and _moveTo will need to be refectored into one method with options
 	var _moveInDirection = function(item, direction) {
 		var index = _data(item).get('item_index');
 		var direction = direction === 'up' ? index + 1 : index - 1;
 		var new_index = _move(this.items, index, direction);
 		var modified = _getModifiedHelper(this.items, index, new_index);
 
-		_data(item).set('item_index', new_index);
-		_reFlow(modified, index, this);
+		_data(item).set({ 'item_index': new_index, 'previous_index': index });
+		_reFlow(modified, new_index, index, this);
+	};
+
+	var _moveTo = function(item, position) {
+		var index = _data(item).get('item_index');
+		var new_index = _move(this.items, index, position);
+		var modified = _getModifiedHelper(this.items, index, new_index);
+
+		_data(item).set({ 'item_index': new_index, 'previous_index': index });
+		_reFlow(modified, new_index, index, this);
 	};
 
 	var _getModifiedHelper = function(items, start_index, end_index, context) {
@@ -103,8 +125,9 @@
 		}
 	};
 
-	var _reFlow = function(items, index, context) {
+	var _reFlow = function(items, new_index, old_index, context) {
 		var i = 0, length = items.length;
+		var index = new_index > old_index ? old_index : new_index;
 
 		if(items.length === context.items.length) index = 0;
 
@@ -171,7 +194,7 @@
 
 	PileRef.applyProps = function(pile, elm) {
 		elm.cid = _uniqueId();
-		_data(elm).set({ 'guid': _uniqueId(), 'item_index': pile.items.length });
+		_data(elm).set({ 'guid': _uniqueId(), 'item_index': pile.items.length, 'previous_index': pile.items.length });
 		_applyZindex.call(pile, elm, pile.items.length);
 		pile.items.push(elm);
 
