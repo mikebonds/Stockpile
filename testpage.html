@@ -50,10 +50,13 @@
 </head>
 
 <body>
-	<!-- Currently, no content will be visable on the page -->
+<div class="my-items one"></div>
+<div class="my-items two"></div>
+
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 <script>
 
-var LayerManager = new Stockpile({
+var LayerManager = Stockpile({
 	className: 'my-pile my-awesome-class',
 
 	name: 'LayerManager',
@@ -71,6 +74,11 @@ var LayerManager = new Stockpile({
 		for(var i = 1; i <= 4; i++) {
 			this.addItem(false, false, 'test' + i);
 		}
+	},
+
+	addNewItems: function() {
+		var items = $('.my-items');
+		this.addItem(items);
 	}
 });
 </script>
