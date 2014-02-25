@@ -1,13 +1,13 @@
 (function(window, undefined) {
+	// Setup Stockpile factory
 	var Stockpile = function(extension) {
 		extension = extension || {};
 
 		return _initializePile(extension);
 	};
 
-	Stockpile.prototype = Stockpile.fn = {
-		constructor: Stockpile,
-
+	// Stockpile Factory
+	Stockpile.fn = Stockpile.factory = {
 		tagName: 'div',
 
 		className: '',
@@ -17,8 +17,6 @@
 		name: '',
 
 		items: [],
-
-		events: {},
 
 		name: '',
 
@@ -41,11 +39,17 @@
 			_moveInDirection.call(this, item, 'up');
 		},
 
+		// Will need a better argument name for amount as it can also be an array of elements.
 		addItem: function(amount, type, classes) {
-			var items = PileRef.insert(this.sp_id, amount, (type || 'div'), classes);
-			this.length += items.length;
+			if(amount instanceof Array || typeof amount === 'object') {
+				PileRef.insert(this.sp_id, amount, 'elements');
+				this.length = this.items.length;
+			} else {
+				var items = PileRef.insert(this.sp_id, amount, (type || 'div'), classes);
+				this.length += items.length;
 			
-			return items;
+				return items;
+			}
 		},
 
 		destroy: function(arg) {
@@ -65,7 +69,7 @@
 		length: 0
 	};
 
-	Stockpile.VERSION = '0.1.2.1';
+	Stockpile.VERSION = '0.1.3.0';
 
 	// Element Methods
 	var _destroy = function() {
@@ -126,30 +130,49 @@
 		item.style.zIndex = zIndex;
 	};
 
-	var PileRef = function(pile) {
+	PileRef = function(pile) {
 		PileRef.piles.push(pile);
 	};
 
 	PileRef.insert = function(id, amount, type, classes) {
-		var pile = _find(PileRef.piles, { sp_id: id }), amount = amount ? amount : 1,
-			i = 0, length, elm, elements = [], classes = classes ? pile.name + '-item' + ' ' + classes : pile.name + '-item';
+		var pile = _find(PileRef.piles, { sp_id: id }),
+			i = 0, length, elm, to_add, 
+			elements = [], 
+			classes = classes ? pile.name + '-item' + ' ' + classes : pile.name + '-item';
 
-		length = amount;
-
-		for(; i < length; i++) {
-			var elm = PileRef.create(pile, type, classes);
-			elements.push(elm);
+		if(type === 'elements') {
+			length = amount.length;
+			to_add = amount;
+		} else {
+			length = amount || 1;
 		}
+
+		if(to_add) {
+			for(; i < length; i++) {
+				var elm = PileRef.applyProps(pile, to_add[i]);
+				elements.push(elm);
+			}
+		} else {
+			for(; i < length; i++) {
+				var elm = PileRef.create(pile, type, classes);
+				pile.el.appendChild(elm);
+				elements.push(elm);
+			}
+		}
+		
 
 		return elements;
 	};
 
 	PileRef.create = function(pile, type, classes) {
 		var elm = _createElement(type, classes);
+		return PileRef.applyProps(pile, elm);
+	};
+
+	PileRef.applyProps = function(pile, elm) {
 		elm.cid = _uniqueId();
 		_data(elm).set({ 'guid': _uniqueId(), 'item_index': pile.items.length });
 		_applyZindex.call(pile, elm, pile.items.length);
-		pile.el.appendChild(elm);
 		pile.items.push(elm);
 
 		return elm;
@@ -195,7 +218,7 @@
 
 	var _initializePile = function(obj) {
 		obj = _extend(obj, Stockpile.fn);
-		obj.sp_id = _uniqueId('Stockpile');
+		obj.sp_id = _uniqueId();
 
 		if(obj.el) {
 			obj.el = _select(obj.el)[0];
@@ -238,6 +261,8 @@
 
 	// Extends the given obj with the source object - returns the extended object.
 	var _extend = _s.extend = function(obj, source) {
+		source = _deepClone(source);
+
 		for(var prop in source) {
 			if(!obj.hasOwnProperty(prop)) {
 				obj[prop] = source[prop];
@@ -300,6 +325,24 @@
 		arr.splice(new_index, 0, arr.splice(index, 1)[0]);
 
 		return new_index;
+	};
+
+	// Create a d
+	var _deepClone = _s.deepClone = function(source) {
+		var clone = {};
+		if(source) {
+			for (var prop in source) {
+				if (typeof source[prop] === 'object') {
+					clone[prop] = source[prop].constructor === Array ? [] : {}; 
+					_deepClone(source[prop], clone[prop]);
+				} else {
+					clone[prop] = source[prop];
+				} 
+			}
+			return clone;
+		}
+
+		return false;
 	};
 
 	// Define Stockpile and _s as AMD Modules if available.
