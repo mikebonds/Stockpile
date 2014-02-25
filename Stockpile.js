@@ -327,7 +327,8 @@
 		return new_index;
 	};
 
-	// Create a d
+	// Create a deep clone of the passed source object.
+	// Returns a new clone.
 	var _deepClone = _s.deepClone = function(source) {
 		var clone = {};
 		if(source) {
